@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         var horizontalRotation = (Input.GetAxis("Mouse X") * horizontalSensibility * Time.deltaTime) + transform.eulerAngles.y;
-        transform.eulerAngles = new Vector3(0f, horizontalRotation, 0f); 
+        transform.eulerAngles = new Vector3(0f, horizontalRotation, 0f);
+        
+        var movement = new Vector3( Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
+        _characterController.Move(transform.rotation * movement * (speed * Time.deltaTime));
     }
 }
