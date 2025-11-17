@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Weapons;
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private CharacterController _characterController;
     private Weapon _weapon;
     private float _shootTimer;
+
+    public Sprite Crosshair => _weapon ? _weapon.crosshair : null;
 
     private void Awake()
     {

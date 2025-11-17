@@ -6,7 +6,7 @@ namespace Weapons
 {
     public abstract class Weapon : MonoBehaviour
     {
-        [SerializeField] private Image crosshair;
+        [SerializeField] public Sprite crosshair;
         [SerializeField] public bool isAutomatic;
         [SerializeField] protected float damage;
         [SerializeField] public float shootDelay;
