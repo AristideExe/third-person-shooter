@@ -1,0 +1,18 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Weapons
+{
+    public abstract class Weapon : MonoBehaviour
+    {
+        [SerializeField] private Image crosshair;
+        [SerializeField] public bool isAutomatic;
+        [SerializeField] protected float damage;
+        [SerializeField] public float shootDelay;
+        [SerializeField] public float reloadTime;
+        [SerializeField] protected float shootDistance = 100f;
+
+        public abstract List<(IDamageable, float)> Shoot();
+    }
+}
