@@ -1116,6 +1116,7 @@ MonoBehaviour:
   shootDelay: 0.1
   reloadTime: 2
   shootDistance: 100
+  recoil: 3
 --- !u!1 &1515617061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1293,8 +1294,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   horizontalSensibility: 250
+  verticalSensibility: 250
+  cameraController: {fileID: 2016495821}
   weaponSocket: {fileID: 2037904135}
-  weaponPrefab: {fileID: 1499551829}
+  weaponPrefab: {fileID: 1969002890}
 --- !u!143 &1946852790
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1373,6 +1376,7 @@ MonoBehaviour:
   shootDelay: 0.5
   reloadTime: 2
   shootDistance: 50
+  recoil: 10
   numberOfShots: 5
   bulletDispersion: 6
   distanceDamageReduction: 12
@@ -1601,8 +1605,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minVerticalOrientation: -90
   maxVerticalOrientation: 90
-  verticalSensibility: 250
-  player: {fileID: 1946852788}
+  player: {fileID: 1946852789}
   cameraTransform: {fileID: 1038629356}
 --- !u!1 &2037904134
 GameObject:

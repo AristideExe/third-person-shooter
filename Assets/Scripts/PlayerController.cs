@@ -5,10 +5,14 @@ using Weapons;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
-    [SerializeField] private float horizontalSensibility = 250f;
+    
+    [SerializeField] public float horizontalSensibility = 250f;
+    [SerializeField] public float verticalSensibility = 250f;
+    [SerializeField] private CameraController cameraController;
+    
     [SerializeField] private Transform weaponSocket;
     [SerializeField] private Weapon weaponPrefab;
-   
+    
     private CharacterController _characterController;
     private Weapon _weapon;
     private float _shootTimer;
@@ -41,6 +45,7 @@ public class PlayerController : MonoBehaviour
             {
                 touched = _weapon.Shoot();
                 _shootTimer = _weapon.shootDelay;
+                cameraController.AddRecoil(_weapon.recoil);
             }
         
             // Semi-auto weapon
@@ -48,6 +53,7 @@ public class PlayerController : MonoBehaviour
             {
                 touched = _weapon.Shoot();
                 _shootTimer = _weapon.shootDelay;
+                cameraController.AddRecoil(_weapon.recoil);
             }
 
             for (int i = 0; i < touched.Count; i++)
