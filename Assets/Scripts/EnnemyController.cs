@@ -18,6 +18,6 @@ public class EnnemyController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        
+        Debug.Log(damage);
     }
 }

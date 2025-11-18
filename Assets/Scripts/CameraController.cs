@@ -8,12 +8,6 @@ public class CameraController : MonoBehaviour
     [SerializeField] private PlayerController player;
     [SerializeField] private Transform cameraTransform;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }   
-
     // Update is called once per frame
     void Update()
     {
@@ -23,8 +17,9 @@ public class CameraController : MonoBehaviour
         transform.eulerAngles = new Vector3(calculatedRotation, player.transform.eulerAngles.y, 0f); 
     }
 
-    public void AddRecoil(float recoil)
+    public void VerticalRecoil(float verticalRecoil)
     {
+        var recoil = Random.Range(0.1f, 0.5f) * verticalRecoil;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x - recoil, transform.eulerAngles.y, transform.eulerAngles.z);
     }
 }

@@ -12,7 +12,8 @@ namespace Weapons
         [SerializeField] public float shootDelay;
         [SerializeField] public float reloadTime;
         [SerializeField] protected float shootDistance = 100f;
-        [SerializeField] public float recoil;
+        [SerializeField] public float horizontalRecoil;
+        [SerializeField] public float verticalRecoil;
 
         public abstract List<(IDamageable, float)> Shoot();
     }

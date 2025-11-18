@@ -1048,7 +1048,8 @@ MonoBehaviour:
   shootDelay: 0.1
   reloadTime: 2
   shootDistance: 100
-  recoil: 3
+  horizontalRecoil: 0
+  verticalRecoil: 0
 --- !u!1 &1515617061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1307,7 +1308,8 @@ MonoBehaviour:
   shootDelay: 0.5
   reloadTime: 2
   shootDistance: 50
-  recoil: 10
+  horizontalRecoil: 15
+  verticalRecoil: 15
   numberOfShots: 5
   bulletDispersion: 6
   distanceDamageReduction: 12
