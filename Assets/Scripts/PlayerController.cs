@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Weapons;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private float speed = 8f;
+    [SerializeField] private float jumpForce = 2f;
     
     [SerializeField] public float horizontalSensibility = 250f;
     [SerializeField] public float verticalSensibility = 250f;
@@ -15,8 +18,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Weapon weaponPrefab;
     
     private CharacterController _characterController;
+    private Vector3 _playerVelocity;
     private Weapon _weapon;
     private float _shootTimer;
+    
+    private const float GravityValue = -20f;
 
     public Sprite Crosshair => _weapon ? _weapon.crosshair : null;
 
@@ -30,14 +36,8 @@ public class PlayerController : MonoBehaviour
         _weapon = weaponObject.GetComponent<Weapon>();
     }
 
-    void Update()
+    private void Update()
     {
-        var horizontalRotation = (Input.GetAxis("Mouse X") * horizontalSensibility * Time.deltaTime) + transform.eulerAngles.y;
-        transform.eulerAngles = new Vector3(0f, horizontalRotation, 0f);
-        
-        var movement = new Vector3( Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")).normalized;
-        _characterController.Move(transform.rotation * movement * (speed * Time.deltaTime));
-        
         // Shooting
         _shootTimer -= Time.deltaTime;
         if (_shootTimer <= 0f)
@@ -60,6 +60,29 @@ public class PlayerController : MonoBehaviour
                 touched[i].Item1.TakeDamage(touched[i].Item2);
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        var horizontalRotation = (Input.GetAxis("Mouse X") * horizontalSensibility * Time.deltaTime) + transform.eulerAngles.y;
+        transform.eulerAngles = new Vector3(0f, horizontalRotation, 0f);
+        
+        if (_characterController.isGrounded && _playerVelocity.y < 0)
+        {
+            _playerVelocity.y = 0f;
+        }
+        
+        var movement = Vector3.ClampMagnitude(new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")), 1f);
+
+        if (Input.GetKeyDown("space") && _characterController.isGrounded)
+        {
+            _playerVelocity.y = Mathf.Sqrt(jumpForce * -2.0f * GravityValue);
+        }
+        
+        // Apply gravity
+        _playerVelocity.y += GravityValue * Time.deltaTime;
+        
+        _characterController.Move(((transform.rotation * movement * speed) + (_playerVelocity.y * Vector3.up)) * Time.deltaTime);
     }
 
     private void Shoot(out List<(IDamageable, float)> touched)

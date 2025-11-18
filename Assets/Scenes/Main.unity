@@ -1225,7 +1225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e518c323d341e31c19ceec750fb07d6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 8
+  jumpForce: 2
   horizontalSensibility: 250
   verticalSensibility: 250
   cameraController: {fileID: 2016495821}
