@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 _playerVelocity;
     private Weapon _weapon;
     private float _shootTimer;
+
+    private float _lastTimeJumpPressed = 1f;
     
     private const float GravityValue = -20f;
 
@@ -38,6 +40,15 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        var horizontalRotation = (Input.GetAxis("Mouse X") * horizontalSensibility * Time.deltaTime) + transform.eulerAngles.y;
+        transform.eulerAngles = new Vector3(0f, horizontalRotation, 0f);
+        
+        if (Input.GetKeyDown("space"))
+        {
+            _lastTimeJumpPressed = 0f;
+        }
+        else _lastTimeJumpPressed += Time.deltaTime;
+        
         // Shooting
         _shootTimer -= Time.deltaTime;
         if (_shootTimer <= 0f)
@@ -64,17 +75,15 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var horizontalRotation = (Input.GetAxis("Mouse X") * horizontalSensibility * Time.deltaTime) + transform.eulerAngles.y;
-        transform.eulerAngles = new Vector3(0f, horizontalRotation, 0f);
-        
         if (_characterController.isGrounded && _playerVelocity.y < 0)
         {
             _playerVelocity.y = 0f;
         }
         
         var movement = Vector3.ClampMagnitude(new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical")), 1f);
-
-        if (Input.GetKeyDown("space") && _characterController.isGrounded)
+        
+        // If player tries to jump 0.2s before hitting the ground, he will jump anyway
+        if (_lastTimeJumpPressed < 0.2f && _characterController.isGrounded)
         {
             _playerVelocity.y = Mathf.Sqrt(jumpForce * -2.0f * GravityValue);
         }
