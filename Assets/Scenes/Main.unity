@@ -1707,6 +1707,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minVerticalOrientation: -90
   maxVerticalOrientation: 90
+  zoomSpeed: 10
+  zoomLimits: {x: 1, y: 2}
   player: {fileID: 1946852789}
   cameraTransform: {fileID: 1038629356}
 --- !u!1 &2037904134
