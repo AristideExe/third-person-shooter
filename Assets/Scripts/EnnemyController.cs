@@ -11,10 +11,13 @@ public class EnnemyController : MonoBehaviour, IDamageable
     [SerializeField] private float attackDelay = 3f;
     [SerializeField] private float attackDistance = 3f;
     [SerializeField] private float damages = 8f;
-
+    [SerializeField] private Window assignatedWindow;
+    [SerializeField] private float windowTraverseDuration;
+    
     private NavMeshAgent _navMeshAgent;
     private float _attackTimer = 0f;
     private float _health;
+    private bool _isTraversingWindow;
 
     private void Awake()
     {
@@ -25,6 +28,8 @@ public class EnnemyController : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
+        if (_isTraversingWindow) return;
+        
         _attackTimer -= Time.deltaTime;
         if (Vector3.Distance(player.position, transform.position) < 3f)
         {
@@ -36,9 +41,59 @@ public class EnnemyController : MonoBehaviour, IDamageable
         }
         else
         {
+            HandleMovement();
+        }
+    }
+    
+    private void HandleMovement()
+    {
+        // Si une fenêtre est assignée et qu'on n'est pas encore passé
+        if (assignatedWindow)
+        {
+            float distToWindow = Vector3.Distance(transform.position, assignatedWindow.start.position);
+
+            if (distToWindow > 0.5f)
+            {
+                _navMeshAgent.enabled = true;
+                _navMeshAgent.SetDestination(assignatedWindow.start.position);
+            }
+            else
+            {
+                StartCoroutine(TraverseWindow());
+            }
+        }
+        else
+        {
             _navMeshAgent.enabled = true;
             _navMeshAgent.SetDestination(player.position);
         }
+    }
+    
+    private IEnumerator TraverseWindow()
+    {
+        _isTraversingWindow = true;
+        
+        _navMeshAgent.isStopped = true;
+        _navMeshAgent.enabled = false;
+
+        Vector3 startPos = assignatedWindow.start.position;
+        Vector3 endPos = assignatedWindow.end.position;
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / windowTraverseDuration;
+            transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
+        _navMeshAgent.enabled = true;
+        _navMeshAgent.Warp(endPos);
+        _navMeshAgent.isStopped = false;
+        _navMeshAgent.stoppingDistance = 3f;
+
+        assignatedWindow = null;
+        _isTraversingWindow = false;
     }
 
     public void TakeDamage(float damage)
