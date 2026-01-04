@@ -5,10 +5,11 @@ using UnityEngine.UI;
 using Weapons;
 using Random = UnityEngine.Random;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     [SerializeField] private float speed = 8f;
     [SerializeField] private float jumpForce = 2f;
+    [SerializeField] private float maxHealth = 100f;
     
     [SerializeField] public float horizontalSensibility = 250f;
     [SerializeField] public float verticalSensibility = 250f;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _playerVelocity;
     private Weapon _weapon;
     private float _shootTimer;
+    private float _health;
 
     private float _lastTimeJumpPressed = 1f;
     
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour
         weaponObject.SetActive(true);
         weaponObject.transform.parent = weaponSocket;
         _weapon = weaponObject.GetComponent<Weapon>();
+        _health = maxHealth;
     }
 
     private void Update()
@@ -106,5 +109,19 @@ public class PlayerController : MonoBehaviour
     {
         var recoil = Random.Range(-0.5f, 0.5f) * horizontalRecoil;
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - recoil, transform.eulerAngles.z);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        _health -= damage;
+        if (_health <= 0f)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Destroy(gameObject);
     }
 }
