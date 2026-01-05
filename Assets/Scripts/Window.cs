@@ -1,36 +1,40 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Window : MonoBehaviour
 {
     [SerializeField] public Transform start;
     [SerializeField] public Transform end;
+    [SerializeField] private Transform spawner;
 
     private Queue<EnnemyController> _queue =  new Queue<EnnemyController>();
-    private bool _isOccupied = false;
+    private bool _isTraversing = false;
+
+    public void SpawnEnemy(GameObject enemyPrefab)
+    {
+        var instance = Instantiate(enemyPrefab, spawner.position,  Quaternion.identity);
+        instance.TryGetComponent<EnnemyController>(out var enemy);
+        enemy.assignatedWindow = this;
+        instance.SetActive(true);
+        _queue.Enqueue(enemy);
+    }
     
-    public void RequestPassage(EnnemyController enemy)
+    private void Update()
     {
-        if (!_queue.Contains(enemy))
-            _queue.Enqueue(enemy);
-
-        TryNext();
+        if (_queue.Count > 0 && !_isTraversing)
+        {
+            var enemy = _queue.Dequeue();
+            enemy.TryGetComponent<NavMeshAgent>(out var enemyAgent);
+            enemyAgent.stoppingDistance = 0f;
+            _isTraversing = true;
+        }
     }
 
-    private void TryNext()
+    public void FinishedTraversal()
     {
-        if (_isOccupied || _queue.Count == 0)
-            return;
-
-        var enemy = _queue.Dequeue();
-        _isOccupied = true;
-        enemy.StartWindowTraversal();
-    }
-
-    public void Release()
-    {
-        _isOccupied = false;
-        TryNext();
+        _isTraversing = false;
     }
 }

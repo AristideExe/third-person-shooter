@@ -7,9 +7,7 @@ using UnityEngine.AI;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private List<Window> windows;
-    [SerializeField] private List<Window> accessibleWindows;
     [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private Transform enemySpawner;
 
     private int _numberOfEnemiesAlive;
     private int _numberOfEnemiesPerWave = 6;
@@ -25,10 +23,7 @@ public class GameManager : MonoBehaviour
         _waveNumber++;
         for (int i = 0; i < _numberOfEnemiesPerWave; i++)
         {
-            var instance = Instantiate(enemyPrefab, enemySpawner.position,  Quaternion.identity);
-            instance.TryGetComponent<EnnemyController>(out var enemy);
-            enemy.assignatedWindow = accessibleWindows[i % accessibleWindows.Count];
-            instance.SetActive(true);
+            windows[i % windows.Count].SpawnEnemy(enemyPrefab);
         }
         _numberOfEnemiesAlive = _numberOfEnemiesPerWave;
     }

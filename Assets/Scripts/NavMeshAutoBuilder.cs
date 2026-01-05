@@ -22,7 +22,7 @@ public class NavMeshAutoBuilder : MonoBehaviour
             sources,
             new Bounds(
                 Vector3.zero,
-                new Vector3(50f, 0.5f, 50f)),
+                new Vector3(200f, 0.5f, 200f)),
             Vector3.zero,
             Quaternion.identity);
 

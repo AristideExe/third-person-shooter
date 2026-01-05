@@ -59,12 +59,11 @@ public class EnnemyController : MonoBehaviour, IDamageable
             }
             else
             {
-                assignatedWindow.RequestPassage(this);
                 if (_navMeshAgent.enabled && _navMeshAgent.isOnNavMesh)
                 {
                     _navMeshAgent.isStopped = true;
                 }
-
+                StartCoroutine(TraverseWindow());
             }
         }
         else
@@ -100,8 +99,8 @@ public class EnnemyController : MonoBehaviour, IDamageable
         _navMeshAgent.Warp(endPos);
         _navMeshAgent.isStopped = false;
         _navMeshAgent.stoppingDistance = 3f;
-        
-        assignatedWindow.Release();
+
+        assignatedWindow.FinishedTraversal();
         assignatedWindow = null;
         _isTraversingWindow = false;
     }
@@ -131,13 +130,5 @@ public class EnnemyController : MonoBehaviour, IDamageable
             player.TryGetComponent<IDamageable>(out IDamageable damageable);
             damageable.TakeDamage(damages);
         }
-    }
-    
-    public void StartWindowTraversal()
-    {
-        if (_isTraversingWindow)
-            return;
-
-        StartCoroutine(TraverseWindow());
     }
 }
