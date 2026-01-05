@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     private bool _isReloading;
     private float _lastTimeJumpPressed = 1f;
     private const float GravityValue = -20f;
+    
+    private Animator _animator;
+    private int _reloadingHash;
 
     public Sprite Crosshair => _weapon ? _weapon.crosshair : null;
     public int Money => _money;
@@ -44,6 +47,9 @@ public class PlayerController : MonoBehaviour, IDamageable
         weaponObject.transform.parent = weaponSocket;
         _weapon = weaponObject.GetComponent<Weapon>();
         _health = maxHealth;
+        
+        _animator = GetComponentInChildren<Animator>();
+        _reloadingHash = Animator.StringToHash("Reloading");
     }
 
     private void Update()
@@ -143,8 +149,12 @@ public class PlayerController : MonoBehaviour, IDamageable
     private IEnumerator Reload()
     {
         _isReloading = true;
+        _animator.SetBool(_reloadingHash, true);
+        Debug.Log(_weapon.ReloadTime);
         yield return new WaitForSeconds(_weapon.ReloadTime);
-        _weapon.Reload();
+        
         _isReloading = false;
+        _animator.SetBool(_reloadingHash, false);
+        _weapon.Reload();
     }
 }
