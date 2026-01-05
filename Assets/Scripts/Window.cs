@@ -10,7 +10,7 @@ public class Window : MonoBehaviour
     [SerializeField] public Transform end;
     [SerializeField] private Transform spawner;
 
-    private Queue<EnnemyController> _queue =  new Queue<EnnemyController>();
+    private List<EnnemyController> _enemiesAssigned =  new List<EnnemyController>();
     private bool _isTraversing = false;
 
     public void SpawnEnemy(GameObject enemyPrefab)
@@ -19,22 +19,38 @@ public class Window : MonoBehaviour
         instance.TryGetComponent<EnnemyController>(out var enemy);
         enemy.assignatedWindow = this;
         instance.SetActive(true);
-        _queue.Enqueue(enemy);
+        _enemiesAssigned.Add(enemy);
     }
     
     private void Update()
     {
-        if (_queue.Count > 0 && !_isTraversing)
+        if (_enemiesAssigned.Count > 0 && !_isTraversing)
         {
-            var enemy = _queue.Dequeue();
-            enemy.TryGetComponent<NavMeshAgent>(out var enemyAgent);
-            enemyAgent.stoppingDistance = 0f;
-            _isTraversing = true;
+            if (_enemiesAssigned[0])
+            {
+                _enemiesAssigned[0].TryGetComponent<NavMeshAgent>(out var enemyAgent);
+                enemyAgent.stoppingDistance = 0f;
+                _enemiesAssigned.Remove(_enemiesAssigned[0]);
+                _isTraversing = true;
+            }
+            else
+            {
+                _enemiesAssigned.Remove(_enemiesAssigned[0]);
+            }
         }
     }
 
     public void FinishedTraversal()
     {
         _isTraversing = false;
+    }
+
+    public void AssignedEnemyKilled(EnnemyController ennemy)
+    {
+        _enemiesAssigned.Remove(ennemy);
+        if (_enemiesAssigned.Count == 0)
+        {
+            _isTraversing = false;
+        }
     }
 }

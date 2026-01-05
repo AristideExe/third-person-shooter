@@ -116,6 +116,15 @@ public class EnnemyController : MonoBehaviour, IDamageable
 
     private void Die()
     {
+        if (assignatedWindow)
+        {
+            assignatedWindow.AssignedEnemyKilled(this);
+            if (_isTraversingWindow)
+            {
+                assignatedWindow.FinishedTraversal();
+            }
+        }
+       
         gameManager.EnemyKilled();
         Destroy(gameObject);
     }
