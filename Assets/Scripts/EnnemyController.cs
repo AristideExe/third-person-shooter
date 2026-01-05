@@ -11,8 +11,9 @@ public class EnnemyController : MonoBehaviour, IDamageable
     [SerializeField] private float attackDelay = 3f;
     [SerializeField] private float attackDistance = 3f;
     [SerializeField] private float damages = 8f;
-    [SerializeField] private Window assignatedWindow;
+    [SerializeField] public Window assignatedWindow;
     [SerializeField] private float windowTraverseDuration;
+    [SerializeField] private GameManager gameManager;
     
     private NavMeshAgent _navMeshAgent;
     private float _attackTimer = 0f;
@@ -50,16 +51,20 @@ public class EnnemyController : MonoBehaviour, IDamageable
         // Si une fenêtre est assignée et qu'on n'est pas encore passé
         if (assignatedWindow)
         {
-            float distToWindow = Vector3.Distance(transform.position, assignatedWindow.start.position);
+            float dist = Vector3.Distance(transform.position, assignatedWindow.start.position);
 
-            if (distToWindow > 0.5f)
+            if (dist > 0.5f)
             {
-                _navMeshAgent.enabled = true;
                 _navMeshAgent.SetDestination(assignatedWindow.start.position);
             }
             else
             {
-                StartCoroutine(TraverseWindow());
+                assignatedWindow.RequestPassage(this);
+                if (_navMeshAgent.enabled && _navMeshAgent.isOnNavMesh)
+                {
+                    _navMeshAgent.isStopped = true;
+                }
+
             }
         }
         else
@@ -73,7 +78,11 @@ public class EnnemyController : MonoBehaviour, IDamageable
     {
         _isTraversingWindow = true;
         
-        _navMeshAgent.isStopped = true;
+        if (_navMeshAgent.enabled && _navMeshAgent.isOnNavMesh)
+        {
+            _navMeshAgent.isStopped = true;
+        }
+
         _navMeshAgent.enabled = false;
 
         Vector3 startPos = assignatedWindow.start.position;
@@ -91,7 +100,8 @@ public class EnnemyController : MonoBehaviour, IDamageable
         _navMeshAgent.Warp(endPos);
         _navMeshAgent.isStopped = false;
         _navMeshAgent.stoppingDistance = 3f;
-
+        
+        assignatedWindow.Release();
         assignatedWindow = null;
         _isTraversingWindow = false;
     }
@@ -107,6 +117,7 @@ public class EnnemyController : MonoBehaviour, IDamageable
 
     private void Die()
     {
+        gameManager.EnemyKilled();
         Destroy(gameObject);
     }
 
@@ -120,5 +131,13 @@ public class EnnemyController : MonoBehaviour, IDamageable
             player.TryGetComponent<IDamageable>(out IDamageable damageable);
             damageable.TakeDamage(damages);
         }
+    }
+    
+    public void StartWindowTraversal()
+    {
+        if (_isTraversingWindow)
+            return;
+
+        StartCoroutine(TraverseWindow());
     }
 }
