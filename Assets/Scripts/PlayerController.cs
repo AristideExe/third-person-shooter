@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
         else _lastTimeJumpPressed += Time.deltaTime;
 
-        if (Input.GetKeyDown("r") && !_isReloading && _weapon.WeaponAmmo != _weapon.MaxAmmo)
+        if (Input.GetKeyDown("r") && !_isReloading && _weapon.WeaponAmmo != _weapon.MaxAmmo && TotalAmmo > 0)
         {
             StartCoroutine(Reload());
         }
@@ -150,7 +150,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         _isReloading = true;
         _animator.SetBool(_reloadingHash, true);
-        Debug.Log(_weapon.ReloadTime);
         yield return new WaitForSeconds(_weapon.ReloadTime);
         
         _isReloading = false;
