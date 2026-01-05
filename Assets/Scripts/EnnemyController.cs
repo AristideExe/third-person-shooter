@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public class EnnemyController : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100;
-    [SerializeField] private Transform player;
+    [SerializeField] private PlayerController player;
     [SerializeField] private float attackDelay = 3f;
     [SerializeField] private float attackDistance = 3f;
     [SerializeField] private float damages = 8f;
@@ -32,7 +32,7 @@ public class EnnemyController : MonoBehaviour, IDamageable
         if (_isTraversingWindow) return;
         
         _attackTimer -= Time.deltaTime;
-        if (Vector3.Distance(player.position, transform.position) < 3f)
+        if (Vector3.Distance(player.transform.position, transform.position) < 3f)
         {
             if (_attackTimer < 0f)
             {
@@ -69,7 +69,7 @@ public class EnnemyController : MonoBehaviour, IDamageable
         else
         {
             _navMeshAgent.enabled = true;
-            _navMeshAgent.SetDestination(player.position);
+            _navMeshAgent.SetDestination(player.transform.position);
         }
     }
     
@@ -107,6 +107,7 @@ public class EnnemyController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
+        player.AddMoney();
         _health -= damage;
         if (_health <= 0)
         {

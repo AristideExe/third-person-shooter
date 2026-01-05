@@ -23,12 +23,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Weapon _weapon;
     private float _shootTimer;
     private float _health;
+    private int _money;
 
     private float _lastTimeJumpPressed = 1f;
-    
     private const float GravityValue = -20f;
 
     public Sprite Crosshair => _weapon ? _weapon.crosshair : null;
+    public int Money => _money;
 
     private void Awake()
     {
@@ -123,5 +124,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void Die()
     {
         Destroy(gameObject);
+    }
+
+    public void AddMoney(int money = 10)
+    {
+        _money += money;
     }
 }
