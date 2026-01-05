@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class GameManager : MonoBehaviour
         _waveNumber++;
         for (int i = 0; i < _numberOfEnemiesPerWave; i++)
         {
-            windows[i % windows.Count].SpawnEnemy(enemyPrefab);
+            windows[Random.Range(0, windows.Count)].SpawnEnemy(enemyPrefab);
         }
         _numberOfEnemiesAlive = _numberOfEnemiesPerWave;
     }
