@@ -9,7 +9,7 @@ public class EnnemyController : MonoBehaviour, IDamageable
     [SerializeField] private float maxHealth = 100;
     [SerializeField] private PlayerController player;
     [SerializeField] private float attackDelay = 3f;
-    [SerializeField] private float attackDistance = 3f;
+    [SerializeField] private float attackDistance = 4f;
     [SerializeField] private float damages = 8f;
     [SerializeField] public Window assignatedWindow;
     [SerializeField] private float windowTraverseDuration;
@@ -19,11 +19,17 @@ public class EnnemyController : MonoBehaviour, IDamageable
     private float _attackTimer = 0f;
     private float _health;
     private bool _isTraversingWindow;
+    
+    private Animator _animator;
+    private int _attackHash;
 
     private void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _health = maxHealth;
+        
+        _animator = GetComponentInChildren<Animator>();
+        _attackHash = Animator.StringToHash("Attack");
     }
     
     // Update is called once per frame
@@ -32,8 +38,10 @@ public class EnnemyController : MonoBehaviour, IDamageable
         if (_isTraversingWindow) return;
         
         _attackTimer -= Time.deltaTime;
-        if (Vector3.Distance(player.transform.position, transform.position) < 3f)
+        if (Vector3.Distance(player.transform.position, transform.position) < 2f)
         {
+            _navMeshAgent.enabled = false;
+            transform.rotation =  Quaternion.LookRotation(player.transform.position - transform.position);
             if (_attackTimer < 0f)
             {
                 Attack();
@@ -98,7 +106,7 @@ public class EnnemyController : MonoBehaviour, IDamageable
         _navMeshAgent.enabled = true;
         _navMeshAgent.Warp(endPos);
         _navMeshAgent.isStopped = false;
-        _navMeshAgent.stoppingDistance = 3f;
+        _navMeshAgent.stoppingDistance = 2f;
 
         assignatedWindow.FinishedTraversal();
         assignatedWindow = null;
@@ -132,8 +140,9 @@ public class EnnemyController : MonoBehaviour, IDamageable
 
     private void Attack()
     {
-        Physics.Linecast(transform.position, transform.forward * attackDistance, out RaycastHit hit);
-        Debug.DrawLine(transform.position, transform.forward * attackDistance, Color.blue, 5);
+        _animator.SetTrigger(_attackHash);
+        Physics.Linecast(transform.position, transform.position + transform.forward * attackDistance, out RaycastHit hit);
+        Debug.DrawLine(transform.position, transform.position + transform.forward * attackDistance, Color.blue, 5);
         
         if (hit.collider && hit.collider.gameObject.TryGetComponent<PlayerController>(out PlayerController player))
         {
