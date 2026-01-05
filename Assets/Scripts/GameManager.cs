@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     private int _numberOfEnemiesAlive;
     private int _numberOfEnemiesPerWave = 6;
     private int _waveNumber;
+    
+    public int WaveNumber => _waveNumber;
 
     void Awake()
     {
