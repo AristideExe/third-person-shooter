@@ -7,14 +7,15 @@ namespace Weapons
     {
         private Camera _mainCamera;
 
-        public void Awake()
+        private new void Awake()
         {
+            base.Awake();
             _mainCamera = Camera.main;
         }
-        
 
         public override List<(IDamageable, float)> Shoot()
         {
+            _weaponAmmo--;
             Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
             if (Physics.Raycast(ray, out RaycastHit hit, shootDistance))
@@ -28,7 +29,22 @@ namespace Weapons
                     };
                 }
             }
+
             return new List<(IDamageable, float)>();
+        }
+
+        public override void Reload()
+        {
+            if (maxAmmo < totalAmmo)
+            {
+                totalAmmo -= maxAmmo - _weaponAmmo;
+                _weaponAmmo = maxAmmo;
+            }
+            else
+            {
+                _weaponAmmo = totalAmmo;
+                totalAmmo = 0;
+            }
         }
     }
 }

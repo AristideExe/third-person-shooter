@@ -11,5 +11,6 @@ public class UIStats : MonoBehaviour
     void Update()
     {
         moneyText.text = $"{playerController.Money} $";
+        ammoText.text = $"{playerController.WeaponAmmo}/{playerController.TotalAmmo}";
     }
 }

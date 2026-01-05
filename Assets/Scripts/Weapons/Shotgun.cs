@@ -13,8 +13,9 @@ namespace Weapons
         
         private Camera _mainCamera;
 
-        public void Awake()
+        private new void Awake()
         {
+            base.Awake();
             _mainCamera = Camera.main;
         }
 
@@ -42,6 +43,11 @@ namespace Weapons
             }
 
             return result;
+        }
+
+        public override void Reload()
+        {
+            throw new NotImplementedException();
         }
     }
 }

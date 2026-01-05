@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,11 +26,14 @@ public class PlayerController : MonoBehaviour, IDamageable
     private float _health;
     private int _money;
 
+    private bool _isReloading;
     private float _lastTimeJumpPressed = 1f;
     private const float GravityValue = -20f;
 
     public Sprite Crosshair => _weapon ? _weapon.crosshair : null;
     public int Money => _money;
+    public int WeaponAmmo => _weapon.WeaponAmmo;
+    public int TotalAmmo => _weapon.TotalAmmo;
 
     private void Awake()
     {
@@ -52,10 +56,15 @@ public class PlayerController : MonoBehaviour, IDamageable
             _lastTimeJumpPressed = 0f;
         }
         else _lastTimeJumpPressed += Time.deltaTime;
+
+        if (Input.GetKeyDown("r") && !_isReloading && _weapon.WeaponAmmo != _weapon.MaxAmmo)
+        {
+            StartCoroutine(Reload());
+        }
         
         // Shooting
         _shootTimer -= Time.deltaTime;
-        if (_shootTimer <= 0f)
+        if (_shootTimer <= 0f && WeaponAmmo > 0 && !_isReloading)
         {
             List<(IDamageable, float)> touched = new List<(IDamageable, float)>();
             // Automatic weapon
@@ -129,5 +138,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void AddMoney(int money = 10)
     {
         _money += money;
+    }
+
+    private IEnumerator Reload()
+    {
+        _isReloading = true;
+        yield return new WaitForSeconds(_weapon.ReloadTime);
+        _weapon.Reload();
+        _isReloading = false;
     }
 }

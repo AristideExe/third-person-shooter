@@ -3434,6 +3434,8 @@ MonoBehaviour:
   isAutomatic: 0
   damage: 15
   shootDelay: 0.1
+  maxAmmo: 0
+  totalAmmo: 0
   reloadTime: 2
   shootDistance: 100
   horizontalRecoil: 0
@@ -3520,6 +3522,8 @@ MonoBehaviour:
   isAutomatic: 1
   damage: 15
   shootDelay: 0.1
+  maxAmmo: 30
+  totalAmmo: 240
   reloadTime: 2
   shootDistance: 100
   horizontalRecoil: 1
@@ -4229,6 +4233,8 @@ MonoBehaviour:
   isAutomatic: 0
   damage: 30
   shootDelay: 0.5
+  maxAmmo: 0
+  totalAmmo: 0
   reloadTime: 2
   shootDistance: 50
   horizontalRecoil: 15
