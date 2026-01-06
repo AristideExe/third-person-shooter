@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         _numberOfEnemiesAlive--;
         if (_numberOfEnemiesAlive <= 0)
         {
-            numberOfEnemiesPerWave = (int) Math.Round(numberOfEnemiesPerWave * 1.3f);
+            numberOfEnemiesPerWave = Mathf.RoundToInt(numberOfEnemiesPerWave * 1.3f);
             StartCoroutine(StartWave());
         }
     }

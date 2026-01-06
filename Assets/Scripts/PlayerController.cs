@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Weapon _weapon;
     private float _shootTimer;
     private float _health;
-    private int _money;
+    private int _money = 5000;
+    private float _damageMultiplier = 1;
 
     private bool _isReloading;
     private float _lastTimeJumpPressed = 1f;
@@ -96,7 +97,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
             for (int i = 0; i < touched.Count; i++)
             {
-                touched[i].Item1.TakeDamage(touched[i].Item2);
+                touched[i].Item1.TakeDamage(touched[i].Item2 * _damageMultiplier);
             }
         }
     }
@@ -183,5 +184,32 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void Heal()
     {
         this._health = maxHealth;
+    }
+
+    public void RefillAmmo()
+    {
+        _weapon.RefillAmmo();
+    }
+
+    public void RemoveMoney(int money)
+    {
+        _money -= money;
+    }
+
+    public void IncreaseDamageMultiplier()
+    {
+        _damageMultiplier += 0.20f;
+    }
+
+    public void IncreaseMaxHealth()
+    {
+        maxHealth += 50;
+        _health += 50;
+    }
+
+
+    public void IncreaseSpeed()
+    {
+        speed += 1f;
     }
 }

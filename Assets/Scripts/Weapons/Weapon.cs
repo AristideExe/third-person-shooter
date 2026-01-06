@@ -12,6 +12,7 @@ namespace Weapons
         [SerializeField] public float shootDelay;
         // Le nombre de balles max dans le chargeur
         [SerializeField] public int maxAmmo;
+        
         // Le nombre de balles que le joueur possède pour cette arme
         [SerializeField] public int totalAmmo;
         [SerializeField] public float reloadTime;
@@ -22,6 +23,8 @@ namespace Weapons
 
         // Le nombre de balles dans le chargeur de l'arme
         protected int _weaponAmmo;
+        // Le nombre de balles max que le joueur peut posséder pour cette arme
+        protected int _maxTotalAmmo;
 
         public int WeaponAmmo => _weaponAmmo;
         public int MaxAmmo => maxAmmo;
@@ -31,9 +34,16 @@ namespace Weapons
         protected void Awake()
         {
             _weaponAmmo = maxAmmo;
+            _maxTotalAmmo = totalAmmo;
         }
 
         public abstract List<(IDamageable, float)> Shoot();
         public abstract void Reload();
+
+        public void RefillAmmo()
+        {
+            totalAmmo = _maxTotalAmmo;
+            _weaponAmmo = maxAmmo;
+        }
     }
 }
