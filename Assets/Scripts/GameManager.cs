@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<Window> windows;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private int numberOfEnemiesPerWave = 6;
+    [SerializeField] private float spawnDelay = 10f;
 
     private int _numberOfEnemiesAlive;
     private int _waveNumber;
@@ -18,12 +19,14 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        StartWave();
+        StartCoroutine(StartWave());
     }
 
-    private void StartWave()
+    private IEnumerator StartWave()
     {
         _waveNumber++;
+        yield return new WaitForSeconds(spawnDelay);
+        
         for (int i = 0; i < numberOfEnemiesPerWave; i++)
         {
             windows[Random.Range(0, windows.Count)].SpawnEnemy(enemyPrefab);
@@ -42,7 +45,7 @@ public class GameManager : MonoBehaviour
         if (_numberOfEnemiesAlive <= 0)
         {
             numberOfEnemiesPerWave = (int) Math.Round(numberOfEnemiesPerWave * 1.3f);
-            StartWave();
+            StartCoroutine(StartWave());
         }
     }
 }
