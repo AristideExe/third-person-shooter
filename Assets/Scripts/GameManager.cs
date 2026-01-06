@@ -28,6 +28,11 @@ public class GameManager : MonoBehaviour
         {
             windows[Random.Range(0, windows.Count)].SpawnEnemy(enemyPrefab);
         }
+
+        foreach (var window in windows)
+        {
+            window.StartWave();
+        }
         _numberOfEnemiesAlive = numberOfEnemiesPerWave;
     }
     

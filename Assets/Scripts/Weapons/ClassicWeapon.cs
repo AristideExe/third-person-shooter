@@ -17,10 +17,10 @@ namespace Weapons
         {
             _weaponAmmo--;
             Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, shootDistance))
+            Debug.DrawRay(ray.origin, ray.direction * shootDistance, Color.red, 5);
+            
+            if (Physics.Raycast(ray, out RaycastHit hit, shootDistance, interactionMask))
             {
-                Debug.DrawRay(ray.origin, ray.direction * shootDistance, Color.red, 5);
                 if (hit.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
                     return new List<(IDamageable, float)>

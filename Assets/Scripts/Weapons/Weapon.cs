@@ -18,6 +18,7 @@ namespace Weapons
         [SerializeField] protected float shootDistance = 100f;
         [SerializeField] public float horizontalRecoil;
         [SerializeField] public float verticalRecoil;
+        [SerializeField] protected LayerMask interactionMask;
 
         // Le nombre de balles dans le chargeur de l'arme
         protected int _weaponAmmo;

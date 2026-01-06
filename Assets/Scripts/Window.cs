@@ -11,9 +11,12 @@ public class Window : MonoBehaviour, IInteractable
     [SerializeField] private Transform spawner;
     [SerializeField] private List<GameObject> planks;
     [SerializeField] private float placePlankDelay = 2f;
+    [SerializeField] private PlayerController player;
 
     private List<EnnemyController> _enemiesAssigned =  new List<EnnemyController>();
-    private bool _isTraversing = false;
+    private bool _isTraversing;
+    private EnnemyController _traversingEnemy;
+    
     private int _plankCount;
     private float _placePlankTimer;
 
@@ -29,33 +32,50 @@ public class Window : MonoBehaviour, IInteractable
     private void Update()
     {
         _placePlankTimer -= Time.deltaTime;
-        if (_enemiesAssigned.Count > 0 && !_isTraversing)
+    }
+
+    public void StartTraversal(EnnemyController enemy)
+    {
+        _isTraversing = true;
+    }
+
+    public void FinishTraversal(EnnemyController enemy)
+    {
+        _isTraversing = false;
+        _traversingEnemy = null;
+        _enemiesAssigned.Remove(enemy);
+        NextTraversal();
+    }
+
+    public void AssignedEnemyKilled(EnnemyController enemy)
+    {
+        // Si l'ennemi tué était en train de traverser, on passe au suivant
+        if (_traversingEnemy == enemy)
         {
-            if (_enemiesAssigned[0])
-            {
-                _enemiesAssigned[0].TryGetComponent<NavMeshAgent>(out var enemyAgent);
-                enemyAgent.stoppingDistance = 0f;
-                _enemiesAssigned.Remove(_enemiesAssigned[0]);
-                _isTraversing = true;
-            }
-            else
-            {
-                _enemiesAssigned.Remove(_enemiesAssigned[0]);
-            }
+            // Il faut bien le retirer avant l'appel de next traversal sinon il sera toujous dans la
+            // liste des ennemis disponibles
+            _enemiesAssigned.Remove(enemy);
+            _isTraversing = false;
+            _traversingEnemy = null;
+            NextTraversal();
+        }
+        else
+        {
+            _enemiesAssigned.Remove(enemy);
         }
     }
 
-    public void FinishedTraversal()
+    public void StartWave()
     {
-        _isTraversing = false;
+        NextTraversal();
     }
 
-    public void AssignedEnemyKilled(EnnemyController ennemy)
+    private void NextTraversal()
     {
-        _enemiesAssigned.Remove(ennemy);
-        if (_enemiesAssigned.Count == 0)
+        if (_enemiesAssigned.Count > 0)
         {
-            _isTraversing = false;
+            _enemiesAssigned[0].MustTraverseWindow = true;
+            _traversingEnemy = _enemiesAssigned[0];
         }
     }
     
@@ -71,6 +91,18 @@ public class Window : MonoBehaviour, IInteractable
             _placePlankTimer = placePlankDelay;
             planks[_plankCount].SetActive(true);
             _plankCount++;
+            player.AddMoney(10);
         }
+    }
+
+    public bool ShouldAttackWindow()
+    {
+        return _plankCount > 0;
+    }
+
+    public void RemovePlank()
+    {
+        planks[_plankCount - 1].gameObject.SetActive(false);
+        _plankCount--;
     }
 }
