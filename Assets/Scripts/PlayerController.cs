@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public int Money => _money;
     public int WeaponAmmo => _weapon.WeaponAmmo;
     public int TotalAmmo => _weapon.TotalAmmo;
+    public float HealthPercent => _health / maxHealth;
 
     private void Awake()
     {

@@ -32,6 +32,8 @@ public class EnnemyController : MonoBehaviour, IDamageable
         set => _mustTraverseWindow = value;
     }
 
+    public float HealthPercent => _health / maxHealth;
+
     private Animator _animator;
     private int _attackHash;
     private int _traverseWindowHash;
