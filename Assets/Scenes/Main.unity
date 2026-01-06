@@ -13531,6 +13531,7 @@ MonoBehaviour:
   horizontalSensibility: 250
   verticalSensibility: 250
   cameraController: {fileID: 2016495821}
+  gameManager: {fileID: 318753220}
   weaponSocket: {fileID: 2037904135}
   weaponPrefab: {fileID: 1563520735}
 --- !u!143 &1946852790

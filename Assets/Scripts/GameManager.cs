@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -47,5 +48,10 @@ public class GameManager : MonoBehaviour
             numberOfEnemiesPerWave = Mathf.RoundToInt(numberOfEnemiesPerWave * 1.3f);
             StartCoroutine(StartWave());
         }
+    }
+
+    public void GameOver()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

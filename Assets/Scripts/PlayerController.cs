@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] public float horizontalSensibility = 250f;
     [SerializeField] public float verticalSensibility = 250f;
     [SerializeField] private CameraController cameraController;
+    [SerializeField] private GameManager gameManager;
     
     [SerializeField] private Transform weaponSocket;
     [SerializeField] private Weapon weaponPrefab;
@@ -151,7 +152,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        Destroy(gameObject);
+        gameManager.GameOver();
     }
 
     public void AddMoney(int money = 10)
