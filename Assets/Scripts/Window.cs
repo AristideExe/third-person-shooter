@@ -4,14 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Window : MonoBehaviour
+public class Window : MonoBehaviour, IInteractable
 {
     [SerializeField] public Transform start;
     [SerializeField] public Transform end;
     [SerializeField] private Transform spawner;
+    [SerializeField] private List<GameObject> planks;
+    [SerializeField] private float placePlankDelay = 2f;
 
     private List<EnnemyController> _enemiesAssigned =  new List<EnnemyController>();
     private bool _isTraversing = false;
+    private int _plankCount;
+    private float _placePlankTimer;
 
     public void SpawnEnemy(GameObject enemyPrefab)
     {
@@ -24,6 +28,7 @@ public class Window : MonoBehaviour
     
     private void Update()
     {
+        _placePlankTimer -= Time.deltaTime;
         if (_enemiesAssigned.Count > 0 && !_isTraversing)
         {
             if (_enemiesAssigned[0])
@@ -51,6 +56,21 @@ public class Window : MonoBehaviour
         if (_enemiesAssigned.Count == 0)
         {
             _isTraversing = false;
+        }
+    }
+    
+    public void Interact()
+    {
+        TryPlacingPlank();
+    }
+
+    public void TryPlacingPlank()
+    {
+        if (_plankCount < planks.Count && _placePlankTimer <= 0f &&  !_isTraversing)
+        {
+            _placePlankTimer = placePlankDelay;
+            planks[_plankCount].SetActive(true);
+            _plankCount++;
         }
     }
 }

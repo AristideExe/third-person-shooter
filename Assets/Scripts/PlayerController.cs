@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private Weapon weaponPrefab;
     
     private CharacterController _characterController;
+    private Camera _mainCamera;
     private Vector3 _playerVelocity;
     private Weapon _weapon;
     private float _shootTimer;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private bool _isReloading;
     private float _lastTimeJumpPressed = 1f;
     private const float GravityValue = -20f;
+    private const float InteractDistance = 5f;
     
     private Animator _animator;
     private int _reloadingHash;
@@ -41,6 +43,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
+        _mainCamera = Camera.main;
         Cursor.lockState = CursorLockMode.Locked;
         var weaponObject = Instantiate(weaponPrefab, weaponSocket.position, transform.rotation).gameObject;
         weaponObject.SetActive(true);
@@ -63,9 +66,14 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
         else _lastTimeJumpPressed += Time.deltaTime;
 
-        if (Input.GetKeyDown("r") && !_isReloading && _weapon.WeaponAmmo != _weapon.MaxAmmo && TotalAmmo > 0)
+        if (Input.GetKeyDown(KeyCode.R) && !_isReloading && _weapon.WeaponAmmo != _weapon.MaxAmmo && TotalAmmo > 0)
         {
             StartCoroutine(Reload());
+        }
+
+        if (Input.GetKey(KeyCode.E))
+        {
+            Interact();
         }
         
         // Shooting
@@ -155,5 +163,19 @@ public class PlayerController : MonoBehaviour, IDamageable
         _isReloading = false;
         _animator.SetBool(_reloadingHash, false);
         _weapon.Reload();
+    }
+
+    private void Interact()
+    {
+        Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        Debug.DrawRay(ray.origin, ray.direction * InteractDistance, Color.blue, 5);
+        if (Physics.Raycast(ray, out RaycastHit hit, InteractDistance))
+        {
+            if (hit.collider.TryGetComponent<IInteractable>(out IInteractable interactable))
+            {
+               interactable.Interact();
+            }
+        }
     }
 }
