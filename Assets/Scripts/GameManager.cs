@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         
         for (int i = 0; i < numberOfEnemiesPerWave; i++)
         {
-            windows[Random.Range(0, windows.Count)].SpawnEnemy(enemyPrefab);
+            windows[Random.Range(0, windows.Count)].SpawnEnemy(enemyPrefab, _waveNumber);
         }
 
         foreach (var window in windows)

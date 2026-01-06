@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Object = System.Object;
 
 public class Window : MonoBehaviour, IInteractable
 {
@@ -20,12 +21,18 @@ public class Window : MonoBehaviour, IInteractable
     private int _plankCount;
     private float _placePlankTimer;
 
-    public void SpawnEnemy(GameObject enemyPrefab)
+    public void SpawnEnemy(GameObject enemyPrefab, int waveNumber)
     {
         var instance = Instantiate(enemyPrefab, spawner.position,  Quaternion.identity);
         instance.TryGetComponent<EnnemyController>(out var enemy);
+        
         enemy.assignatedWindow = this;
+        // L'ennemi voit ses stats augmenter avec les vagues
+        enemy.MaxHealth += (float) Math.Pow(enemy.MaxHealth, waveNumber * 0.2f);
+        enemy.Damages += (float)Math.Pow(enemy.Damages, waveNumber * 0.2f);
         instance.SetActive(true);
+        
+        
         _enemiesAssigned.Add(enemy);
     }
     

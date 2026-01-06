@@ -34,6 +34,18 @@ public class EnnemyController : MonoBehaviour, IDamageable
 
     public float HealthPercent => _health / maxHealth;
 
+    public float MaxHealth
+    {
+        get => maxHealth;
+        set => maxHealth = value;
+    }
+
+    public float Damages
+    {
+        get => damages;
+        set => damages = value;
+    }
+
     private Animator _animator;
     private int _attackHash;
     private int _traverseWindowHash;
