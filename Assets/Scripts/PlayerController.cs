@@ -178,4 +178,9 @@ public class PlayerController : MonoBehaviour, IDamageable
             }
         }
     }
+
+    public void Heal()
+    {
+        this._health = maxHealth;
+    }
 }

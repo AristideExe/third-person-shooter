@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class EnnemyController : MonoBehaviour, IDamageable
 {
@@ -14,6 +15,7 @@ public class EnnemyController : MonoBehaviour, IDamageable
     [SerializeField] public Window assignatedWindow;
     [SerializeField] private float windowTraverseDuration;
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private HealingItem healingItemPrefab;
     
     private NavMeshAgent _navMeshAgent;
     private float _attackTimer;
@@ -169,8 +171,13 @@ public class EnnemyController : MonoBehaviour, IDamageable
     private void Die()
     {
         assignatedWindow.AssignedEnemyKilled(this);
-       
         gameManager.EnemyKilled();
+        
+        if (Random.value < 0.1f)
+        {
+            Instantiate(healingItemPrefab, transform.position, Quaternion.identity).gameObject.SetActive(true);
+        }
+        
         Destroy(gameObject);
     }
 
