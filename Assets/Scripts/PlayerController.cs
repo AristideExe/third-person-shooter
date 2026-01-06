@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Weapon _weapon;
     private float _shootTimer;
     private float _health;
-    private int _money = 5000;
+    private int _money;
     private float _damageMultiplier = 1;
 
     private bool _isReloading;
@@ -41,6 +41,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     public int WeaponAmmo => _weapon.WeaponAmmo;
     public int TotalAmmo => _weapon.TotalAmmo;
     public float HealthPercent => _health / maxHealth;
+    public float MaxHealth => maxHealth;
+    public float Speed => speed;
+    public float DamageMultiplier => _damageMultiplier;
 
     private void Awake()
     {

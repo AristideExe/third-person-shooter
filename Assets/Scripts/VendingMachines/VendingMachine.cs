@@ -9,9 +9,18 @@ namespace VendingMachines
         [SerializeField] private int price;
         [SerializeField] private float sellDelay;
         [SerializeField] private float princeIncreaseMultiplier;
-
+        
+        public int Price => price;
+        public float SellDelayPercentage => Math.Clamp(_sellTimer / sellDelay, 0f, 1f);
+        
+        public abstract float CurrentStat
+        {
+            get;
+        }
+        
         private float _sellTimer;
-
+        
+        
         private void Update()
         {
             _sellTimer -= Time.deltaTime;
@@ -23,7 +32,7 @@ namespace VendingMachines
             {
                 player.RemoveMoney(price);
                 _sellTimer = sellDelay;
-                price += Mathf.RoundToInt(price * princeIncreaseMultiplier);
+                price = Mathf.RoundToInt(price * princeIncreaseMultiplier);
                 Sell();
             }
         }
